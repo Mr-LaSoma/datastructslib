@@ -1,0 +1,14 @@
+# Data Structures Library
+
+A lightweight library implementing common data structures in **Go**. I created this project to deepen my understanding of data structures and practice implementing them from scratch.
+
+## Installation
+
+```bash
+go get github.com/mr-lasoma/datastructslib
+```
+
+## Features
+
+* Hashmaps (currently in early development)
+* More data structures coming soon
