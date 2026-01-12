@@ -110,10 +110,25 @@ func (b *bucketMap[K, V]) Clear() {
 	b = newBucketMap[K, V]()
 }
 
+// ToSlice is the function used to get a slice based of all the values of the bucketMap.
+// This function recursively checks for all the overflows items too, so it might be slow!
+func (b *bucketMap[K, V]) ToSlice() []V {
+	slice := make([]V, b.currentSize)
+	for i := range b.currentSize {
+		slice[i] = b.values[i]
+	}
+
+	if b.overflow == nil {
+		return slice
+	}
+
+	return append(slice, b.overflow.ToSlice()...)
+}
+
 // computeTopHash is a function to compute the tophash from a
 // comparable value (see bucketMap.findKeyIndex).
 func computeTopHashCode[K comparable](key K) int {
-	return int(utils.MustHashCode(key) >> 16)
+	return int(utils.MustHashCode(key) >> _BSHIFT_TOPHASH)
 }
 
 // findKeyIndex is a function used to find the index of a given key
