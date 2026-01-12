@@ -34,33 +34,39 @@ type bucketMap[K comparable, V any] struct {
 }
 
 // newBucketMap is the base function to get a [K and V] default bucketMap
-func newBucketMap[K comparable, V any]() *bucketMap[K, V] {
+func newBucketMap[K comparable, V any]() bucketMap[K, V] {
+	return bucketMap[K, V]{}
+}
+
+// newBucketMapPtr is the base function to get a [K and V] default bucketMap (ptr)
+func newBucketMapPtr[K comparable, V any]() *bucketMap[K, V] {
 	return &bucketMap[K, V]{}
 }
 
 // Put is the function used to put a value in the
 // corresponding key index. If there is no space, it initialize and
-// puts the key in the overflow (recursively)
-func (b *bucketMap[K, V]) Put(key K, value V) {
+// puts the key in the overflow (recursively).
+// If the key already exist returns false otherwise returns true
+func (b *bucketMap[K, V]) Put(key K, value V) bool {
 	th := computeTopHashCode(key)
 	indx, err := b.findKeyIndex(key, th)
 	if err == nil {
 		b.values[indx] = value
-		return
+		return false
 	}
 
 	if b.currentSize >= len(b.keys) {
 		if b.overflow == nil {
-			b.overflow = newBucketMap[K, V]()
+			b.overflow = newBucketMapPtr[K, V]()
 		}
-		b.overflow.Put(key, value)
-		return
+		return b.overflow.Put(key, value)
 	}
 
 	b.topHashCodes[b.currentSize] = th
 	b.keys[b.currentSize] = key
 	b.values[b.currentSize] = value
 	b.currentSize++
+	return true
 }
 
 // Get is the function used to get a value by the corresponding key.
@@ -84,7 +90,7 @@ func (b *bucketMap[K, V]) Get(key K) (V, error) {
 	return b.overflow.Get(key)
 }
 
-// remove is the function used to remove a key and its corrisponding value.
+// Remove is the function used to remove a key and its corrisponding value (it returns the value aswell).
 // If the key is not found, it searches in the overflow (recursively), until either
 // the overflow is nil (returns an error) or the key is found.
 func (b *bucketMap[K, V]) Remove(key K) (V, error) {
@@ -105,9 +111,13 @@ func (b *bucketMap[K, V]) Remove(key K) (V, error) {
 	return b.overflow.Remove(key)
 }
 
-// clear is the function used to reset the bucketMap.
+// Clear is the function used to reset the bucketMap.
 func (b *bucketMap[K, V]) Clear() {
-	b = newBucketMap[K, V]()
+	b.topHashCodes = [_BUCKET_SIZE]int{}
+	b.keys = [_BUCKET_SIZE]K{}
+	b.values = [_BUCKET_SIZE]V{}
+	b.overflow = nil
+	b.currentSize = 0
 }
 
 // ToSlice is the function used to get a slice based of all the values of the bucketMap.
@@ -123,6 +133,14 @@ func (b *bucketMap[K, V]) ToSlice() []V {
 	}
 
 	return append(slice, b.overflow.ToSlice()...)
+}
+
+// Size is the function used to get the size of the current bucketMap + all the overflows
+func (b *bucketMap[K, V]) Size() int {
+	if b.overflow == nil {
+		return b.currentSize
+	}
+	return b.currentSize + b.overflow.Size()
 }
 
 // computeTopHash is a function to compute the tophash from a
