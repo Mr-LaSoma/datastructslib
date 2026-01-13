@@ -7,6 +7,10 @@ type HashMap[K comparable, V any] struct {
 	globalSize int
 }
 
+func NewHashMap[K comparable, V any]() *HashMap[K, V] {
+	return &HashMap[K, V]{}
+}
+
 // Put is the function used to put a value in the
 // corresponding position (see bucketMap.Put).
 func (h *HashMap[K, V]) Put(key K, value V) {
@@ -56,11 +60,12 @@ func (h *HashMap[K, V]) IsEmpty() bool {
 			return false
 		}
 	}
+
 	return true
 }
 
 // computeBucketsIndex is a function to find the bucket where
 // a key-value pair must be stored.
-func computeBucketsIndex[K comparable](key K) int {
-	return int(utils.MustHashCode(key)) % _BUCKET_SIZE
+func computeBucketsIndex[K comparable](key K) uint64 {
+	return utils.MustHashCode(key) % _BUCKET_SIZE
 }
