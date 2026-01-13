@@ -10,5 +10,10 @@ go get github.com/mr-lasoma/datastructslib
 
 ## Features
 
-* Hashmaps (currently in early development)
-* More data structures coming soon
+* Hashmaps
+* Queues
+* Stacks (coming soon)
+* LinkedLists (working in progress)
+* Heaps (coming soon)
+* Trees (coming soon)
+* Sets (coming soon)
