@@ -2,11 +2,18 @@ package hashmap
 
 import "github.com/mr-lasoma/datastructslib/src/utils"
 
+// HashMap is a simple generic hash map implementation.
+// K is the key type and must be comparable (required for map keys in Go).
+// V is the value type and can be any type.
 type HashMap[K comparable, V any] struct {
-	buckets    [_BUCKETS_COUNT]bucketMap[K, V]
+	// fixed-size array of buckets; each bucket handles collisions
+	buckets [_BUCKETS_COUNT]bucketMap[K, V]
+
+	// total number of key-value pairs stored in the hash map
 	globalSize int
 }
 
+// Returns HashMap pointer
 func NewHashMap[K comparable, V any]() *HashMap[K, V] {
 	return &HashMap[K, V]{}
 }
