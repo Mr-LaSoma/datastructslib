@@ -1,108 +1,95 @@
 package linkedlist
 
-import "fmt"
-
-type SinglyLinkedList[T any] struct {
-	head *SinglyNode[T]
+type DoublyLinkedList[T any] struct {
+	head, tail *DoublyNode[T]
 	size int
 
 	defaultValValue T
 }
 
-// NewSinglyLinkedList is the function to get a default singly linked list.
-// This function returns a linked list with a empty head node.
-func NewSinglyLinkedList[T any]() *SinglyLinkedList[T] {
-	return &SinglyLinkedList[T]{
-		head: &SinglyNode[T]{},
-	}
-}
-
 // GetHead is the function to get the first node of the list.
 // If there is no head node it returns an error.
-func (l *SinglyLinkedList[T]) GetHead() (*SinglyNode[T], error) {
+func (l *DoublyLinkedList[T]) GetHead() (*DoublyNode[T], error) {
 	if l.head == nil {
 		return nil, fmt.Errorf("Head node doesn't exist")
 	}
 	return l.head, nil
 }
 
-func (l *SinglyLinkedList[T]) GetTail() (*SinglyNode[T], error) {
-	if l.head == nil {
+// GetTail is the function to get the last node of the list.
+// If there is no tail node it returns an error.
+func (l *DoublyLinkedList[T]) GetTail() (*DoublyNode[T], error) {
+	if l.tail == nil {
 		return nil, fmt.Errorf("Tail node doesn't exist")
 	}
-	return mustFind(l.size-1, l.head), nil
+	return l.tail, nil
 }
 
 // PushFront is the function to insert a value at the head of the linked list.
-func (l *SinglyLinkedList[T]) PushFront(value T) {
-	n := &SinglyNode[T]{
+func (l *DoublyLinkedList[T]) PushFront(value T) {
+	n := &DoublyLinkedList{
 		Value: value,
-		next:  l.head,
+		next: l.head,
+		prev: l.tail,
 	}
 	l.head = n
-	l.size++
+	if l.tail != nil {
+		l.tail.next = n
+	}
 }
 
-// PushBack is the function to insert a value at the tail of the linked list
-// This function checks every node (recursively) so it may be slow!
-func (l *SinglyLinkedList[T]) PushBack(value T) {
-	if l.head == nil {
-		l.head = &SinglyNode[T]{
-			Value: value,
-		}
-		l.size++
-		return
-	}
-
-	n := mustFind(l.size-1, l.head)
-
-	n.next = &SinglyNode[T]{
-		Value: value,
-	}
-	l.size++
+// PushBack is the function to insert a value at the tail of the linked list (see PushFront)
+func (l *DoublyLinkedList[T]) PushBack(value T) {
+	l.PushFront(value)
 }
 
 // PopFront is the function to remove the node and return the value at the head of the linked list.
-func (l *SinglyLinkedList[T]) PopFront() (T, error) {
-	if l.head == nil {
+func (l *DoublyLinkedList[T]) PopFront() (T, error) {
+	if l.size == 0 {
 		return l.defaultValValue, fmt.Errorf("Head node doesn't exist")
 	}
+	
 	v := l.head.Value
-	l.head = l.head.next
-	l.size--
-	return v, nil
+	l.tail.next = l.head.next
+	l.head.next.prev = l.tail
+	return v
 }
 
 // PopFront is the function to remove the node and return the value at the head of the linked list.
-func (l *SinglyLinkedList[T]) PopBack() (T, error) {
-	if l.head == nil {
+func (l *DoublyLinkedList[T]) PopBack() (T, error) {
+	if l.size == 0 {
 		return l.defaultValValue, fmt.Errorf("Head node doesn't exist")
 	}
 
-	n := mustFind(l.size-2, l.head)
-
-	val := n.next.Value
-
-	n.next = nil
-	l.size--
-	return val, nil
+	v := l.tail.Value
+	l.head.prev = l.tail.prev
+	l.tail.prev.next = l.head
+	return v
 }
 
 // MustGet is the function to get the value at a certain index. 
 // If the index is not valid the programm panics (see mustFind)
 func (l *SinglyLinkedList[T]) MustGet(indx int) T {
+	if indx == l.size {
+		return l.tail.Value
+	}
 	return mustFind(index, l.head)
 }
 
 // MustSet is the function to set the value at a certain index. 
 // If the index is not valid the programm panics (see mustFind)
 func (l *SinglyLinkedList[T]) MustSet(indx int, value T) {
+	if indx == l.size {
+		l.tail.Value = value
+		return
+	}
 	n := mustFind(index, l.head)
 	n.Value = value
 }
 
+
 // Size is the function to get the # of all the nodes in the list
-func (l *SinglyLinkedList[T]) Size() int {
+func (l *DoublyLinkedList[T]) Size() int {
 	return l.size
 }
 
