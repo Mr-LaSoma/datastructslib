@@ -14,7 +14,7 @@ type SinglyLinkedList[T any] struct {
 func NewSinglyLinkedList[T any]() *SinglyLinkedList[T] {
 	return &SinglyLinkedList[T]{
 		head: &SinglyNode[T]{},
-		size: 1
+		size: 1,
 	}
 }
 
@@ -89,16 +89,16 @@ func (l *SinglyLinkedList[T]) PopBack() (T, error) {
 	return val, nil
 }
 
-// MustGet is the function to get the value at a certain index. 
+// MustGet is the function to get the value at a certain index.
 // If the index is not valid the programm panics (see mustFind)
 func (l *SinglyLinkedList[T]) MustGet(indx int) T {
-	return mustFind(index, l.head)
+	return mustFind(indx, l.head).Value
 }
 
-// MustSet is the function to set the value at a certain index. 
+// MustSet is the function to set the value at a certain index.
 // If the index is not valid the programm panics (see mustFind)
 func (l *SinglyLinkedList[T]) MustSet(indx int, value T) {
-	n := mustFind(index, l.head)
+	n := mustFind(indx, l.head)
 	n.Value = value
 }
 

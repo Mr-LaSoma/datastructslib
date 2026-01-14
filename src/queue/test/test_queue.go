@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"runtime/pprof"
 
@@ -22,17 +23,18 @@ func main() {
 	print(q)
 }
 
-func popolate(q *queue.NewQueue[int]) {
+func popolate(q *queue.Queue[int]) {
 	for i := 0; i < 10_000; i++ {
 		q.Enqueue(i)
 	}
 }
 
-func print(q *queue.NewQueue[int]) {
+func print(q *queue.Queue[int]) {
 	for i := 0; i < 10_000; i++ {
-		fmt.println(q.Dequeue())
+		v, err := q.Dequeue()
 		if err != nil {
 			return
 		}
+		fmt.Println(v)
 	}
 }

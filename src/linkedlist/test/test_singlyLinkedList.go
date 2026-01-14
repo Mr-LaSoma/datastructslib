@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"runtime/pprof"
 
@@ -24,15 +25,16 @@ func main() {
 
 func popolate(l *ll.SinglyLinkedList[int]) {
 	for i := 0; i < 10_000; i++ {
-		q.PushFront(i)
+		l.PushFront(i)
 	}
 }
 
-func print(q *queue.NewQueue[int]) {
+func print(l *ll.SinglyLinkedList[int]) {
 	for i := 0; i < 10_000; i++ {
-		fmt.println(q.PopBack())
+		v, err := l.PopBack()
 		if err != nil {
 			return
 		}
+		fmt.Println(v)
 	}
 }

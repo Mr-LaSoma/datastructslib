@@ -1,18 +1,21 @@
 package linkedlist
 
+import "fmt"
+
 type DoublyLinkedList[T any] struct {
 	head, tail *DoublyNode[T]
-	size int
+	size       int
 
 	defaultValValue T
 }
 
 func NewDoublyLinkedList[T any]() *DoublyLinkedList[T] {
 	l := &DoublyLinkedList[T]{
-		head: &SinglyNode[T]{},
-		size: 1
+		head: &DoublyNode[T]{},
+		size: 1,
 	}
 	l.tail = l.head
+	return l
 }
 
 // GetHead is the function to get the first node of the list.
@@ -35,10 +38,10 @@ func (l *DoublyLinkedList[T]) GetTail() (*DoublyNode[T], error) {
 
 // PushFront is the function to insert a value at the head of the linked list.
 func (l *DoublyLinkedList[T]) PushFront(value T) {
-	n := &DoublyLinkedList{
+	n := &DoublyNode[T]{
 		Value: value,
-		next: l.head,
-		prev: l.tail,
+		next:  l.head,
+		prev:  l.tail,
 	}
 	l.head = n
 	if l.tail != nil {
@@ -56,11 +59,11 @@ func (l *DoublyLinkedList[T]) PopFront() (T, error) {
 	if l.size == 0 {
 		return l.defaultValValue, fmt.Errorf("Head node doesn't exist")
 	}
-	
+
 	v := l.head.Value
 	l.tail.next = l.head.next
 	l.head.next.prev = l.tail
-	return v
+	return v, nil
 }
 
 // PopFront is the function to remove the node and return the value at the head of the linked list.
@@ -72,29 +75,28 @@ func (l *DoublyLinkedList[T]) PopBack() (T, error) {
 	v := l.tail.Value
 	l.head.prev = l.tail.prev
 	l.tail.prev.next = l.head
-	return v
+	return v, nil
 }
 
-// MustGet is the function to get the value at a certain index. 
+// MustGet is the function to get the value at a certain index.
 // If the index is not valid the programm panics (see mustFind)
-func (l *SinglyLinkedList[T]) MustGet(indx int) T {
+func (l *DoublyLinkedList[T]) MustGet(indx int) T {
 	if indx == l.size {
 		return l.tail.Value
 	}
-	return mustFind(index, l.head)
+	return mustFindDoubly(indx, l.head).Value
 }
 
-// MustSet is the function to set the value at a certain index. 
+// MustSet is the function to set the value at a certain index.
 // If the index is not valid the programm panics (see mustFind)
-func (l *SinglyLinkedList[T]) MustSet(indx int, value T) {
+func (l *DoublyLinkedList[T]) MustSet(indx int, value T) {
 	if indx == l.size {
 		l.tail.Value = value
 		return
 	}
-	n := mustFind(index, l.head)
+	n := mustFindDoubly(indx, l.head)
 	n.Value = value
 }
-
 
 // Size is the function to get the # of all the nodes in the list
 func (l *DoublyLinkedList[T]) Size() int {
@@ -102,7 +104,7 @@ func (l *DoublyLinkedList[T]) Size() int {
 }
 
 // mustFind is the helper function to search in the list recursively
-func mustFind[T any](cindx int, n *SinglyNode[T]) *SinglyNode[T] {
+func mustFindDoubly[T any](cindx int, n *DoublyNode[T]) *DoublyNode[T] {
 	if cindx < 0 {
 		panic("Invalid index")
 	}
@@ -117,5 +119,5 @@ func mustFind[T any](cindx int, n *SinglyNode[T]) *SinglyNode[T] {
 	}
 
 	cindx--
-	return mustFind(cindx, nn)
+	return mustFindDoubly(cindx, nn)
 }
