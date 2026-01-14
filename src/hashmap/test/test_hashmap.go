@@ -5,6 +5,7 @@ import (
 	"runtime/pprof"
 
 	hm "github.com/mr-lasoma/datastructslib/src/hashmap"
+	"github.com/mr-lasoma/datastructslib/src/queue"
 )
 
 func main() {
