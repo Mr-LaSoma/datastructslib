@@ -12,8 +12,4 @@ go get github.com/mr-lasoma/datastructslib
 
 * Hashmaps
 * Queues
-* Stacks (coming soon)
-* LinkedLists (working in progress)
-* Heaps (coming soon)
-* Trees (coming soon)
-* Sets (coming soon)
+* LinkedLists
