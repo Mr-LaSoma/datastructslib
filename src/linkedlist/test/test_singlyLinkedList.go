@@ -4,7 +4,7 @@ import (
 	"os"
 	"runtime/pprof"
 
-	hm "github.com/mr-lasoma/datastructslib/src/hashmap"
+	ll "github.com/mr-lasoma/datastructslib/src/linkedlist"
 )
 
 func main() {
@@ -17,19 +17,22 @@ func main() {
 	pprof.StartCPUProfile(f)
 	defer pprof.StopCPUProfile()
 
-	hm := hm.NewHashMap[int, int]()
-	popolate(hm)
-	print(hm)
+	l := ll.NewSinglyLinkedList[int]()
+	popolate(l)
+	print(l)
 }
 
-func popolate(hm *hm.HashMap[int, int]) {
+func popolate(l *ll.SinglyLinkedList[int]) {
 	for i := 0; i < 10_000; i++ {
-		hm.Put(i, i)
+		q.PushFront(i)
 	}
 }
 
-func print(hm *hm.HashMap[int, int]) {
+func print(q *queue.NewQueue[int]) {
 	for i := 0; i < 10_000; i++ {
-		_, _ = hm.Get(i)
+		fmt.println(q.PopBack())
+		if err != nil {
+			return
+		}
 	}
 }

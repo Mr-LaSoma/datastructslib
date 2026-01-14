@@ -14,6 +14,7 @@ type SinglyLinkedList[T any] struct {
 func NewSinglyLinkedList[T any]() *SinglyLinkedList[T] {
 	return &SinglyLinkedList[T]{
 		head: &SinglyNode[T]{},
+		size: 1
 	}
 }
 

@@ -4,7 +4,7 @@ import (
 	"os"
 	"runtime/pprof"
 
-	hm "github.com/mr-lasoma/datastructslib/src/hashmap"
+	"github.com/mr-lasoma/datastructslib/src/queue"
 )
 
 func main() {
@@ -17,19 +17,22 @@ func main() {
 	pprof.StartCPUProfile(f)
 	defer pprof.StopCPUProfile()
 
-	hm := hm.NewHashMap[int, int]()
-	popolate(hm)
-	print(hm)
+	q := queue.NewQueue[int]()
+	popolate(q)
+	print(q)
 }
 
-func popolate(hm *hm.HashMap[int, int]) {
+func popolate(q *queue.NewQueue[int]) {
 	for i := 0; i < 10_000; i++ {
-		hm.Put(i, i)
+		q.Enqueue(i)
 	}
 }
 
-func print(hm *hm.HashMap[int, int]) {
+func print(q *queue.NewQueue[int]) {
 	for i := 0; i < 10_000; i++ {
-		_, _ = hm.Get(i)
+		fmt.println(q.Dequeue())
+		if err != nil {
+			return
+		}
 	}
 }

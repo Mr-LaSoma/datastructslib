@@ -7,6 +7,14 @@ type DoublyLinkedList[T any] struct {
 	defaultValValue T
 }
 
+func NewDoublyLinkedList[T any]() *DoublyLinkedList[T] {
+	l := &DoublyLinkedList[T]{
+		head: &SinglyNode[T]{},
+		size: 1
+	}
+	l.tail = l.head
+}
+
 // GetHead is the function to get the first node of the list.
 // If there is no head node it returns an error.
 func (l *DoublyLinkedList[T]) GetHead() (*DoublyNode[T], error) {
