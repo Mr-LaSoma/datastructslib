@@ -88,6 +88,19 @@ func (l *SinglyLinkedList[T]) PopBack() (T, error) {
 	return val, nil
 }
 
+// MustGet is the function to get the value at a certain index. 
+// If the index is not valid the programm panics (see mustFind)
+func (l *SinglyLinkedList[T]) MustGet(indx int) T {
+	return mustFind(index, l.head)
+}
+
+// MustSet is the function to set the value at a certain index. 
+// If the index is not valid the programm panics (see mustFind)
+func (l *SinglyLinkedList[T]) MustSet(indx int, value T) {
+	n := mustFind(index, l.head)
+	n.Value = value
+}
+
 // Size is the function to get the # of all the nodes in the list
 func (l *SinglyLinkedList[T]) Size() int {
 	return l.size
